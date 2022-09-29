@@ -1,0 +1,8 @@
+---
+include:
+  - local: 'gitlabci/sh.yaml'
+
+.defaults:
+  before_script:
+    - !reference [.sh_toolset, setopts]
+...

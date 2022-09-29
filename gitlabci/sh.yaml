@@ -1,0 +1,6 @@
+---
+.sh_toolset:
+  setopts:
+    - set -eu -o pipefail
+    - if [[ -n "${G_DEBUG:-}" ]]; then set -x; fi
+...

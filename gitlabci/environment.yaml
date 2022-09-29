@@ -1,0 +1,7 @@
+---
+.rules:
+  semver_tag_dev:
+    - if: $CI_COMMIT_TAG =~ /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}-dev(-[0-9A-Za-z-]+)?$/
+  semver_tag:
+    - if: $CI_COMMIT_TAG =~ /^v[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/
+...
