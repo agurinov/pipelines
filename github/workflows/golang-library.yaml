@@ -1,0 +1,33 @@
+---
+run-name: 'Golang library'
+
+on:
+  push:
+  workflow_call:
+
+jobs:
+  code-quality:
+    name: 'Code quality for go ${{ matrix.go-version }}'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      matrix:
+        go-version: ['1.19.1', '1.19.2']
+    steps:
+      - name: 'Install golang code'
+        uses: actions/checkout@v3
+
+      - name: 'Install dotfiles'
+        uses: agurinov/pipelines/github/actions/setup-dotfiles@main
+
+      - name: 'Install golang ${{ matrix.go-version }}'
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: 'Linting'
+        run: gomake lint
+      - name: 'Testing'
+        run: gomake go_test
+...

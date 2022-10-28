@@ -1,0 +1,23 @@
+---
+name: 'Setup dotfiles toolset'
+description: 'Extend environment by agurinov dotfiles'
+author: 'Aleksandr Gurinov <alexander.gurinov@gmail.com>'
+
+inputs:
+  clone-path:
+    description: 'Where to clone dotfiles'
+    default: 'dotfiles'
+
+outputs: {}
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: 'agurinov/dotfiles'
+        path: ${{ inputs.clone-path }}
+    - run: make dotfiles
+      working-directory: ${{ inputs.clone-path }}
+      shell: bash
+...
