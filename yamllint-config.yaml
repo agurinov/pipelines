@@ -1,0 +1,63 @@
+# vim:ft=yaml
+---
+
+yaml-files:
+  - '*.yaml'
+  - '*.yml'
+  - '.yamllint'
+
+rules:
+  braces: enable
+  colons: enable
+  commas: enable
+  empty-lines: enable
+  empty-values: disable
+  float-values: disable
+  hyphens: enable
+  indentation: enable
+  key-duplicates: enable
+  key-ordering: disable
+  new-line-at-end-of-file: enable
+  new-lines: enable
+  octal-values: disable
+  quoted-strings: disable
+  trailing-spaces: enable
+
+  # https://yamllint.readthedocs.io/en/stable/rules.html#module-yamllint.rules.brackets
+  brackets:
+    forbid: false
+    min-spaces-inside: 0
+    max-spaces-inside: 0
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 0
+
+  # https://yamllint.readthedocs.io/en/stable/rules.html#module-yamllint.rules.comments
+  comments:
+    level: warning
+    require-starting-space: true
+    ignore-shebangs: true
+    min-spaces-from-content: 1
+  comments-indentation:
+    level: warning
+
+  # https://yamllint.readthedocs.io/en/stable/rules.html#module-yamllint.rules.document_start
+  document-start:
+    present: true
+    level: warning
+  document-end:
+    present: true
+    level: warning
+
+  # https://yamllint.readthedocs.io/en/stable/rules.html#module-yamllint.rules.line_length
+  line-length: disable
+  #  line-length:
+  #    max: 80
+  #    allow-non-breakable-words: true
+  #    allow-non-breakable-inline-mappings: true
+
+  # https://yamllint.readthedocs.io/en/stable/rules.html#module-yamllint.rules.truthy
+  truthy:
+    level: warning
+    allowed-values: ['true', 'false', 'on']
+    check-keys: true
+...
