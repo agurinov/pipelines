@@ -6,7 +6,7 @@ author: 'Aleksandr Gurinov <alexander.gurinov@gmail.com>'
 inputs:
   clone-path:
     description: 'Where to clone dotfiles'
-    default: 'dotfiles'
+    default: '.dotfiles'
 
 outputs: {}
 
