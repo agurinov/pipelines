@@ -7,6 +7,9 @@ inputs:
   clone-path:
     description: 'Where to clone dotfiles'
     default: '.dotfiles'
+  token:
+    description: 'In case of private dotfiles repo'
+    default: ''
 
 outputs: {}
 
@@ -17,6 +20,7 @@ runs:
       with:
         repository: 'agurinov/dotfiles'
         path: ${{ inputs.clone-path }}
+        token: ${{ inputs.token }}
     - run: make dotfiles
       working-directory: ${{ inputs.clone-path }}
       shell: bash
