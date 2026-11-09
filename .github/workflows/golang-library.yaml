@@ -11,14 +11,11 @@ on:
       go-versions:
         description: 'JSON array of Go versions for the lint/test matrix'
         type: string
-        default: '["1.25.12", "1.26.5"]'
+        default: '["1.25.14", "1.26.10", "1.27.3"]'
       go-sec-version:
         description: 'Single Go version used for the go_sec job'
         type: string
-        default: '1.26.5'
-    secrets:
-      DOTFILES_GITHUB_TOKEN:
-        required: true
+        default: '1.27.3'
 
 jobs:
   code-quality:
@@ -34,26 +31,40 @@ jobs:
         go-version: ${{ fromJSON(inputs.go-versions) }}
         gomake-target: ['lint', 'go_test']
         include:
-          - go-version: '${{ inputs.go-sec-version }}'
-            gomake-target: 'go_sec'
+          - gomake-target: 'lint'
+            go-tools: 'github.com/golangci/golangci-lint/cmd/golangci-lint@latest'
+          - gomake-target: 'go_sec'
+            go-version: '${{ inputs.go-sec-version }}'
+            go-tools: 'golang.org/x/vuln/cmd/govulncheck@latest'
 
     steps:
       - uses: actions/checkout@v7
-
-      - uses: agurinov/pipelines/.github/actions/setup-dotfiles@main
-        with:
-          token: ${{ secrets.DOTFILES_GITHUB_TOKEN }}
 
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ matrix.go-version }}
 
-      - run: make --include-dir=~/.make --no-print-directory toolset-ci
-        working-directory: .dotfiles/golang
-        env:
-          GO: /opt/hostedtoolcache/go/${{ matrix.go-version }}/x64/bin/go
-          GO_VERSION: ${{ matrix.go-version }}
-          BINDIR: ${HOME}/go/bin
+      # Tools are cached per Go version (they must be built with >= target Go)
+      # and per ISO week, so @latest is refreshed weekly.
+      - id: go-tools-key
+        if: ${{ matrix.go-tools }}
+        run: echo "week=$(date -u +%G-W%V)" >> "${GITHUB_OUTPUT}"
 
-      - run: make --include-dir=~/.make --no-print-directory -f ~/.make/golang.mk ${{ matrix.gomake-target }}
+      - id: go-tools-cache
+        if: ${{ matrix.go-tools }}
+        uses: actions/cache@v6
+        with:
+          path: ~/go/bin
+          key: >-
+            go-tools-${{ runner.os }}-${{ runner.arch }}-go${{ matrix.go-version }}-${{ matrix.gomake-target }}-${{ steps.go-tools-key.outputs.week }}
+
+      - if: ${{ matrix.go-tools && steps.go-tools-cache.outputs.cache-hit != 'true' }}
+        run: |
+          for tool in ${GO_TOOLS}; do
+            go install "${tool}"
+          done
+        env:
+          GO_TOOLS: ${{ matrix.go-tools }}
+
+      - run: make --no-print-directory ${{ matrix.gomake-target }}
 ...
