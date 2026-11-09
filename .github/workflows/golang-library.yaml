@@ -66,5 +66,5 @@ jobs:
         env:
           GO_TOOLS: ${{ matrix.go-tools }}
 
-      - run: make --include-dir=~/.make --no-print-directory -f ~/.make/golang.mk ${{ matrix.gomake-target }}
+      - run: make --no-print-directory ${{ matrix.gomake-target }}
 ...
